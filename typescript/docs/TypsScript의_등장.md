@@ -44,6 +44,70 @@
 ## TypeScript의 추가적인 매력
 - 객체 지향 프로그래밍(OOP)을 할 때도 JavaScript에 비해서 TypeScript는 훨씬 더 큰 메리트가 있다.
     - JavaScript 객체 지향 프로그래밍 예시
+        ```
+        class Person {
+            constructor(name, age){
+                this.name = name;
+                this.age = age;
+            }
+
+            growOlder() {
+                this.age += 1;
+            }
+        }
+
+        const hyerim = new Person('Hyerim', 23);
+
+        // 외부에서 age 속성을 마음대로 조작할 수 있다.
+        hyerim.age = 100;
+        hyerim.growOlder();
+
+        // 나는 1살을 더 먹었지만 101세이다.
+        console.log(hyerim.age); // 101
+        ```
+        - 객체 지향 프로그래밍 언어(JAVA, C++, C#, ...)에서는 다양한 접근 제어자(public, private 등)를 통하여 클래스를 구성하는 프로퍼티의 캡슐화를 보장하고 함수의 호출 범위를 조정할 수 있다. 그런데 위 JavaScript 예제에서는 아무나 속성에 직접 접근하여 값을 변경할 수 있다는 특징이 있다..
+            - 캡슐화: 객체의 속성과 행위를 하나로 묶고, 실제 구현 내용 일부를 내부에 감추어 은닉한다.
+            - 위 코드를 통하여 기대한 것은 처음 생성자를 통해 생성한 객체를 growOlder() 메서드를 통하여 하나씩 나이를 증가하는 것을 원했는데, 실제로는 한방에 age 속성이 조작되어 버려서 원치않게 동작하고 있다.
+            - 이는 클래스를 설계하고 만든 사람의 의도에 따라 사용이 되어야 하는데 그게 보장이 안 되는 경우라고 볼 수 있다.
     - TypeScript 객체 지향 프로그래밍 예시
+        ```
+        class Person {
+            // name과 age를 private를 지정하였다.
+            private _name: string;
+            private _age: number;
+
+            constructor(name: string, age: number){
+                this._name = name;
+                this._age = age;
+            }
+
+            public growOlder(): void {
+                this._age += 1;
+            }
+        }
+
+        const hyerim = new Person('Hyerim', 23);
+
+        hyerim.age = 100; // 'age' 속성은 private이며 'Person' 클래스 내에서만 액세스할 수 있습니다.
+        hyerim.growOlder();
+
+        console.log(hyerim.age); // 'age' 속성은 private이며 'Person' 클래스 내에서만 액세스할 수 있습니다.
+        ```
+        - 사실은 위 코드처럼 동작하여야 맞다. Person이라는 클래스를 만든 사람의 의도는 growOlder() 메서드를 통하여 나이가 증가하기를 원했는데, 만약 협업을 할 때 다른 사람이 메서드 호출이 아닌 다른 방식으로 조작할 수 있는 경로를 애초에 에러를 통하여 막아줄 수 있기 때문이다.
+        - 이와같은 경우 private으로 선언한 속성은 직접적으로 접근할 수 없고, getter()를 따로 만들어서 해당 함수를 통하여 접근할 수 있도록 설정해 주어야 한다
+            - getter 예시
+                ```
+                public get name(): string {
+                    return this._name;
+                }
+                get age(){
+                    return this.age;
+                }
+                ```
 - 위 항목 뿐만 아니라 TypeScirpt는 `d.ts` 라는 확장자를 가진 `선언 파일`을 통해서 외부 모듈의 타입 정보를 제공할 수 있다.
     - 이는 `@types 패키지`와 관련되어 있다.
+    - 이렇게 선언 파일을 설치하면 JavaScript 라이브러리도 TypeScript에서 안전하게 사용 가능하다고 한다.
+
+## ETC
+- TypeScript를 학습하면 이후 정적 타입 시스템, 객체 지향 프로그래밍, 디자인 패턴 등 다양한 프로그래밍 개념을 학습할 수 있다.
+- TypeScript는 JavaScript에 비해 언어에서 보장되는 안정성을 바탕으로 테스트 코드가 줄어들게 되어 비즈니스 로직 작성에 집중할 수 있게 된다.
